@@ -21,6 +21,7 @@ struct ServerState {
     bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
 }
 
+//Make sure to broadcast to all others except sender
 impl ServerState {
     async fn broadcast_message(&self, addr: &SocketAddr, message: String) {
         let users = self.users.lock().await;
@@ -116,4 +117,42 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         });
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio::sync::broadcast;
+    use tokio_websockets::{Message, WebSocketStream};
+    use futures_util::stream::StreamExt;
+    use tokio::net::TcpStream;
+    use futures::channel::mpsc;
+    use std::net::SocketAddr;
+
+    #[tokio::test]
+    async fn test_user_join() {
+        let (bcast_tx, _) = broadcast::channel(16);
+
+        let (mut tx, mut rx) = mpsc::channel(1);
+        let (mock_socket, _other_end) = TcpStream::pair().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+
+        let ws_stream = WebSocketStream::new(mock_socket);
+        tokio::spawn(async move {
+            handle_connection(addr, ws_stream, bcast_tx).await.unwrap();
+        });
+
+        // Simulate sending a message to the server (client sends a message)
+        tx.send(Message::text("/join username")).await.unwrap();
+
+        // Check that the broadcast receiver gets a message about user joining
+        let result = rx.next().await;
+        assert_eq!(result.unwrap().to_string(), "INFO: Joined as username");
+
+        // Check that error is raised on duplicate username
+        tx.send(Message::text("/join username")).await.unwrap();
+        let error_result = rx.next().await;
+        assert!(error_result.unwrap().contains("ERROR: Username already taken"));
+    }
+}
+
 
