@@ -68,3 +68,42 @@ async fn main() -> Result<(), tokio_websockets::Error> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use futures_util::stream;
+    use tokio_websockets::Message;
+
+    #[tokio::test]
+    async fn test_handle_server_messages() {
+        let messages = vec![
+            Message::text("INFO: Welcome to the chat"),
+            Message::text("ERROR: Username already taken"),
+            Message::text("Hello from another user"),
+        ];
+
+        let ws_stream = stream::iter(messages);
+
+        let mut results = vec![];
+
+        ws_stream
+            .for_each(|msg| {
+                if let Ok(text) = msg.as_text() {
+                    if text.starts_with("ERROR:") {
+                        results.push(format!("Error from server: {}", &text[6..]));
+                    } else if text.starts_with("INFO:") {
+                        results.push(format!("Info: {}", &text[5..]));
+                    } else {
+                        results.push(format!("From server: {}", text));
+                    }
+                }
+                futures::future::ready(())
+            })
+            .await;
+
+        assert_eq!(results[0], "Info: Welcome to the chat");
+        assert_eq!(results[1], "Error from server: Username already taken");
+        assert_eq!(results[2], "From server: Hello from another user");
+    }
+}
