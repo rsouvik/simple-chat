@@ -1,7 +1,7 @@
 use tokio_websockets::{ClientBuilder, Message}; // Import Message from the crate
 use http::Uri;
-use futures_util::stream::StreamExt;
-use futures_util::SinkExt;
+use futures_util::{stream::StreamExt, SinkExt};
+use futures_util::sink::SinkExt;
 
 #[tokio::test]
 async fn test_chat_interaction() {
