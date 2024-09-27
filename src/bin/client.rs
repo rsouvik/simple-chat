@@ -74,6 +74,7 @@ mod tests {
     use super::*;
     use futures_util::stream;
     use tokio_websockets::Message;
+    use futures::*;
 
     #[tokio::test]
     async fn test_handle_server_messages() {
