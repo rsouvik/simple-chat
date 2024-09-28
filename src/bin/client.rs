@@ -94,7 +94,7 @@ mod tests {
                     if text.starts_with("ERROR:") {
                         results.push(format!("Error from server: {}", &text[6..]));
                     } else if text.starts_with("INFO:") {
-                        results.push(format!("Info: {}", &text[5..]));
+                        results.push(format!("Info: {}", &text[6..]));
                     } else {
                         results.push(format!("From server: {}", text));
                     }
