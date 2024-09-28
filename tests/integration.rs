@@ -16,6 +16,8 @@ async fn test_chat_interaction() {
             .await
             .unwrap();
 
+        let (mut ws_stream, _) = ws_stream;
+
         ws_stream.send(Message::text("/join user1")).await.unwrap();
         ws_stream.send(Message::text("send Hello, this is user1")).await.unwrap();
 
