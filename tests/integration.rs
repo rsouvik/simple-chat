@@ -32,6 +32,7 @@ async fn test_chat_interaction() {
             .await
             .unwrap();
 
+        let (mut ws_stream, _) = ws_stream;
         ws_stream.send(Message::text("/join user2")).await.unwrap();
         let received = ws_stream.next().await.unwrap();
         assert!(received.as_text().unwrap().contains("INFO: user1 has joined"));
