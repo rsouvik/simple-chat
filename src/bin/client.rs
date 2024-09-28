@@ -90,7 +90,7 @@ mod tests {
 
         ws_stream
             .for_each(|msg| {
-                if let Ok(text) = msg.as_text() {
+                if let Some(text) = msg.as_text() {
                     if text.starts_with("ERROR:") {
                         results.push(format!("Error from server: {}", &text[6..]));
                     } else if text.starts_with("INFO:") {
