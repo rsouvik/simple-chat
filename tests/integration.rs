@@ -19,11 +19,25 @@ async fn test_chat_interaction() {
         let (mut ws_stream, _) = ws_stream;
 
         ws_stream.send(Message::text("/join user1")).await.unwrap();
+
+        let received = ws_stream.next().await.unwrap();
+        if let Ok(msg) = received {
+            assert!(msg.as_text().unwrap().contains("INFO: user1 has joined"));
+        } else {
+            panic!("Failed to receive message");
+        }
+
         ws_stream.send(Message::text("send Hello, this is user1")).await.unwrap();
 
         let received = ws_stream.next().await.unwrap();
-        assert!(received.as_text().unwrap().contains("INFO: user1 has joined"));
-        assert!(received.as_text().unwrap().contains("Hello, this is user1"));
+        if let Ok(msg) = received {
+            assert!(msg.as_text().unwrap().contains("Hello, this is user1"));
+        } else {
+            panic!("Failed to receive message");
+        }
+
+        //assert!(received.as_text().unwrap().contains("INFO: user1 has joined"));
+        //assert!(received.as_text().unwrap().contains("Hello, this is user1"));
     });
 
     let client2_handle = tokio::spawn(async {
@@ -35,11 +49,21 @@ async fn test_chat_interaction() {
         let (mut ws_stream, _) = ws_stream;
         ws_stream.send(Message::text("/join user2")).await.unwrap();
         let received = ws_stream.next().await.unwrap();
-        assert!(received.as_text().unwrap().contains("INFO: user1 has joined"));
+        if let Ok(msg) = received {
+            assert!(msg.as_text().unwrap().contains("INFO: user2 has joined"));
+        } else {
+            panic!("Failed to receive message");
+        }
+        //assert!(received.as_text().unwrap().contains("INFO: user1 has joined"));
 
         ws_stream.send(Message::text("send Hello from user2")).await.unwrap();
         let received = ws_stream.next().await.unwrap();
-        assert!(received.as_text().unwrap().contains("Hello from user2"));
+        if let Ok(msg) = received {
+            assert!(msg.as_text().unwrap().contains("Hello from user2"));
+        } else {
+            panic!("Failed to receive message");
+        }
+        //assert!(received[0].as_text().unwrap().contains("Hello from user2"));
     });
 
     let _ = tokio::join!(server_handle, client1_handle, client2_handle);
