@@ -3,6 +3,12 @@ use http::Uri;
 use futures_util::{stream::StreamExt, SinkExt};
 //use futures_util::sink::SinkExt;
 
+#[path = "../src/bin/server.rs"]
+mod server;
+
+#[path = "../src/bin/client.rs"]
+mod client;
+
 #[tokio::test]
 async fn test_chat_interaction() {
     let server_handle = tokio::spawn(async {
