@@ -13,7 +13,7 @@ mod client;
 async fn test_chat_interaction() {
     let server_handle = tokio::spawn(async {
         // Start the server
-        bin::server::main().await.unwrap();
+        server::main().await.unwrap();
     });
 
     let client1_handle = tokio::spawn(async {
