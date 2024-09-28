@@ -92,7 +92,7 @@ mod tests {
             .for_each(|msg| {
                 if let Some(text) = msg.as_text() {
                     if text.starts_with("ERROR:") {
-                        results.push(format!("Error from server: {}", &text[6..]));
+                        results.push(format!("Error from server: {}", &text[7..]));
                     } else if text.starts_with("INFO:") {
                         results.push(format!("Info: {}", &text[6..]));
                     } else {
