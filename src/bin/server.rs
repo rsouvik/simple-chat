@@ -140,13 +140,11 @@ mod tests {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap(); // Bind to an available port
         let addr = listener.local_addr().unwrap();
 
-
         // Spawn a task to accept a connection in the background
         let server_state = state.clone();
         tokio::spawn(async move {
             let (socket, _peer_addr) = listener.accept().await.unwrap();
-            //let ws_stream = ServerBuilder::new().accept(socket).await.unwrap();
-            let (mut ws_stream, _) = tokio_websockets::ServerBuilder::new().accept(mock_socket).await.unwrap();
+            let ws_stream = ServerBuilder::new().accept(socket).await.unwrap();
             handle_connection(_peer_addr, ws_stream, server_state).await.unwrap();
         });
 
