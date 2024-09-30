@@ -131,6 +131,10 @@ mod tests {
     #[tokio::test]
     async fn test_user_join() {
         let (bcast_tx, _) = broadcast::channel(16);
+        let state = Arc::new(ServerState {
+            users: Mutex::new(HashMap::new()),
+            bcast_tx: bcast_tx.clone(),
+        });
 
         let (mut tx, mut rx) = mpsc::channel(1);
         let (mock_socket, _other_end) = TcpStream::pair().unwrap();
@@ -138,7 +142,7 @@ mod tests {
 
         let ws_stream = WebSocketStream::new(mock_socket);
         tokio::spawn(async move {
-            handle_connection(addr, ws_stream, bcast_tx).await.unwrap();
+            handle_connection(addr, ws_stream, state.clone()).await.unwrap();
         });
 
         // Simulate sending a message to the server (client sends a message)
