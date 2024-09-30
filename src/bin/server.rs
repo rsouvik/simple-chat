@@ -101,7 +101,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let (bcast_tx, _) = channel(16);
     let state = Arc::new(ServerState {
         users: Mutex::new(HashMap::new()),
-        bcast_tx,
+        bcast_tx: bcast_tx.clone(),
     });
 
     let listener = TcpListener::bind("127.0.0.1:2000").await?;
@@ -113,7 +113,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
         tokio::spawn(async move {
             let ws_stream = ServerBuilder::new().accept(socket).await?;
-            handle_connection(addr, ws_stream, state).await
+            handle_connection(addr, ws_stream, state.clone()).await
         });
     }
 }
