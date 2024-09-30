@@ -140,13 +140,13 @@ mod tests {
         // Simulate a client connecting to the server
         tokio::spawn(async move {
             let (client_socket, _) = listener.accept().await.unwrap();
-            let (mut ws_stream, _) = ServerBuilder::new().accept(client_socket).await.unwrap(); // Extract the WebSocketStream
+            let (mut ws_stream, _) = ServerBuilder::new().accept(client_socket).await.unwrap(); // Correctly destructuring the tuple
             handle_connection("127.0.0.1:8080".parse().unwrap(), ws_stream, state.clone()).await.unwrap();
         });
 
         // Create a client-side TCP stream
         let client_socket = TcpStream::connect("127.0.0.1:8080").await.unwrap();
-        let (mut client_ws_stream, _) = ServerBuilder::new().accept(client_socket).await.unwrap(); // Extract the WebSocketStream
+        let (mut client_ws_stream, _) = ServerBuilder::new().accept(client_socket).await.unwrap(); // Correctly destructuring the tuple
 
         // Simulate client sending a message
         let msg = Message::text("/join username");
@@ -158,3 +158,4 @@ mod tests {
         }
     }
 }
+
