@@ -123,7 +123,7 @@ mod tests {
     use super::*;
     use tokio::sync::broadcast;
     use tokio_websockets::{Message, ServerBuilder};
-    use tokio::net::TcpStream;
+    use tokio::net::{TcpListener, TcpStream};
     use std::net::SocketAddr;
 
     #[tokio::test]
@@ -134,21 +134,21 @@ mod tests {
             bcast_tx: bcast_tx.clone(),
         });
 
-        // Create a mock socket pair (one for client, one for server)
-        let (client_socket, server_socket) = tokio::net::TcpStream::pair().unwrap();
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        // Create a TCP listener for the server
+        let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
 
-        // Simulate accepting a WebSocket connection
-        let (mut ws_stream, _) = ServerBuilder::new().accept(server_socket).await.unwrap();
-
-        // Spawn the server side of the connection
+        // Simulate a client connecting to the server
         tokio::spawn(async move {
-            handle_connection(addr, ws_stream, state.clone()).await.unwrap();
+            let (client_socket, _) = listener.accept().await.unwrap();
+            let (mut ws_stream, _) = ServerBuilder::new().accept(client_socket).await.unwrap();
+            handle_connection("127.0.0.1:8080".parse().unwrap(), ws_stream, state.clone()).await.unwrap();
         });
 
-        // Simulate sending a message to the server (client sends a message)
+        // Create a client-side TCP stream
+        let client_socket = TcpStream::connect("127.0.0.1:8080").await.unwrap();
         let (mut client_ws_stream, _) = ServerBuilder::new().accept(client_socket).await.unwrap();
 
+        // Simulate client sending a message
         let msg = Message::text("/join username");
         client_ws_stream.send(msg).await.unwrap();  // Client sends a join message
 
