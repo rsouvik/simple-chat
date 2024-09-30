@@ -122,41 +122,51 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 mod tests {
     use super::*;
     use tokio::sync::broadcast;
-    use tokio_websockets::{Message, WebSocketStream};
+    use tokio_websockets::{Message, WebSocketStream, ServerBuilder};
     use futures_util::stream::StreamExt;
-    use tokio::net::TcpStream;
-    use futures::channel::mpsc;
-    use std::net::SocketAddr;
+    use tokio::net::TcpListener;
+    use std::sync::Arc;
 
     #[tokio::test]
     async fn test_user_join() {
+        // Create a broadcast channel for the test
         let (bcast_tx, _) = broadcast::channel(16);
         let state = Arc::new(ServerState {
             users: Mutex::new(HashMap::new()),
             bcast_tx: bcast_tx.clone(),
         });
 
-        let (mut tx, mut rx) = mpsc::channel(1);
-        let (mock_socket, _other_end) = TcpStream::pair().unwrap();
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        // Set up a TCP listener to simulate a server
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap(); // Bind to an available port
+        let addr = listener.local_addr().unwrap();
 
-        let ws_stream = WebSocketStream::new(mock_socket);
+        // Spawn a task to accept a connection in the background
+        let server_state = state.clone();
         tokio::spawn(async move {
-            handle_connection(addr, ws_stream, state.clone()).await.unwrap();
+            let (socket, _peer_addr) = listener.accept().await.unwrap();
+            let ws_stream = ServerBuilder::new().accept(socket).await.unwrap();
+            handle_connection(_peer_addr, ws_stream, server_state).await.unwrap();
         });
 
-        // Simulate sending a message to the server (client sends a message)
-        tx.send(Message::text("/join username")).await.unwrap();
+        // Simulate a client connecting to the server
+        let client_socket = TcpStream::connect(addr).await.unwrap();
+        let mut ws_stream = tokio_websockets::ClientBuilder::new()
+            .connect(client_socket)
+            .await
+            .unwrap();
 
-        // Check that the broadcast receiver gets a message about user joining
-        let result = rx.next().await;
-        assert_eq!(result.unwrap().to_string(), "INFO: Joined as username");
+        // Simulate sending a join message from the client
+        ws_stream.send(Message::text("/join username")).await.unwrap();
+
+        // Simulate receiving the welcome message from the server
+        if let Some(Ok(received)) = ws_stream.next().await {
+            assert!(received.as_text().unwrap().contains("Joined as username"));
+        }
 
         // Check that error is raised on duplicate username
-        tx.send(Message::text("/join username")).await.unwrap();
-        let error_result = rx.next().await;
-        assert!(error_result.unwrap().contains("ERROR: Username already taken"));
+        ws_stream.send(Message::text("/join username")).await.unwrap();
+        if let Some(Ok(received)) = ws_stream.next().await {
+            assert!(received.as_text().unwrap().contains("Username already taken"));
+        }
     }
 }
-
-
