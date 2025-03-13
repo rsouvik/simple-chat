@@ -6,6 +6,13 @@ edition = "2021"
 #[package.metadata.release]
 #release = false
 
+[profile.release]
+debug = true
+
+[target.x86_64-unknown-linux-gnu]
+linker = "/usr/bin/clang"
+rustflags = ["-Clink-arg=-fuse-ld=lld", "-Clink-arg=-Wl,--no-rosegment"]
+
 [dependencies]
 futures-util = { version = "0.3.30", features = ["sink"] }
 http = "1.1.0"
