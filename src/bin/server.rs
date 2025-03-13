@@ -12,12 +12,13 @@ use std::sync::Arc;
 struct User {
     username: String,
     addr: SocketAddr,
-    ws_stream: WebSocketStream<TcpStream>,
+    ws_stream: WebSocketStream<TcpStream>, // do we need this?
+    lifetime_cnt: i32,
 }
 
 // Structure to hold server state
 struct ServerState {
-    users: Mutex<HashMap<SocketAddr, String>>, // map addr to username
+    users: Mutex<HashMap<SocketAddr,(String,i32)>>, // map addr to username
     bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
 }
 
@@ -62,7 +63,11 @@ async fn handle_connection(
                                 if users.values().any(|name| name == &new_username) {
                                     ws_stream.send(Message::text("Username already taken.".to_string())).await?;
                                 } else {
-                                    users.insert(addr, new_username.clone());
+                                    if users.entry(&addr) == true {
+                                        users.insert(addr, (users.get(addr)[0],users.get(addr)[1]+1));
+                                    }
+                                    else
+                                        users.insert(addr, (new_username.clone(),0));
                                     ws_stream.send(Message::text(format!("Joined as {}", new_username))).await?;
                                     state.bcast_tx.send(format!("{} has joined the chat.", new_username))?;
                                     username = Some(new_username);
