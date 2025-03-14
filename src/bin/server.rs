@@ -60,7 +60,7 @@ async fn handle_connection(
                                 let new_username = text[6..].trim().to_string();
                                 let mut users = state.users.lock().await;
 
-                                if users.values().any(|name| name.0.to_string() == &new_username) {
+                                if users.values().any(|name| name.0.as_slice() == &new_username) {
                                     ws_stream.send(Message::text("Username already taken.".to_string())).await?;
                                 } else {
                                     if users.entry(&addr) == true {
