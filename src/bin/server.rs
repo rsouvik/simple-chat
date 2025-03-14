@@ -26,7 +26,7 @@ struct ServerState {
 impl ServerState {
     async fn broadcast_message(&self, addr: &SocketAddr, message: String) {
         let users = self.users.lock().await;
-        let sender_name = users.get(addr).0.unwrap();
+        let sender_name = users.get(addr).as_ref().0.unwrap();
         let full_msg = format!("{}: {}", sender_name, message);
 
         for (user_addr, _) in users.iter() {
