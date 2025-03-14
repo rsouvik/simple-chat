@@ -84,7 +84,7 @@ async fn handle_connection(
                                             let sname = fv;
                                             if let Some(sv) = users.get(&addr).map(|t| &t.1){
                                                 let count = sv;
-                                                users.insert(addr, (sname,count+1));
+                                                users.insert(addr, (sname.clone(),count+1));
                                             }
                                         }
                                         //users.insert(addr, ((users.get(&addr)).as_ref().0,(users.get(&addr)).as_ref().1+1));
