@@ -26,7 +26,7 @@ struct ServerState {
 impl ServerState {
     async fn broadcast_message(&self, addr: &SocketAddr, message: String) {
         let users = self.users.lock().await;
-        let sender_name = users.get(addr).unwrap();
+        let sender_name = users.get(addr)[0].unwrap();
         let full_msg = format!("{}: {}", sender_name, message);
 
         for (user_addr, _) in users.iter() {
@@ -60,14 +60,15 @@ async fn handle_connection(
                                 let new_username = text[6..].trim().to_string();
                                 let mut users = state.users.lock().await;
 
-                                if users.values().any(|name| name == &new_username) {
+                                if users.values().any(|name[0]| name[0] == &new_username) {
                                     ws_stream.send(Message::text("Username already taken.".to_string())).await?;
                                 } else {
                                     if users.entry(&addr) == true {
                                         users.insert(addr, (users.get(addr)[0],users.get(addr)[1]+1));
                                     }
-                                    else
+                                    else {
                                         users.insert(addr, (new_username.clone(),0));
+                                        }
                                     ws_stream.send(Message::text(format!("Joined as {}", new_username))).await?;
                                     state.bcast_tx.send(format!("{} has joined the chat.", new_username))?;
                                     username = Some(new_username);
