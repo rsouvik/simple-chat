@@ -80,7 +80,14 @@ async fn handle_connection(
                                                 users.insert(addr, (fe,se+1));
                                             }
                                         }*/
-                                        users.insert(addr, ((users.get(&addr)).as_ref().0,(users.get(&addr)).as_ref().1+1));
+                                        if let Some(fv) = users.get(&addr).map(|t| &t.0){
+                                            let sname = fv;
+                                            if let Some(sv) = users.get(&addr).map(|t| &t.1){
+                                                let count = sv;
+                                                users.insert(addr, sname,count+1);
+                                            }
+                                        }
+                                        //users.insert(addr, ((users.get(&addr)).as_ref().0,(users.get(&addr)).as_ref().1+1));
                                     }
                                     else {
                                         users.insert(addr, (new_username.clone(),0));
