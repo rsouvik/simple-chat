@@ -64,7 +64,7 @@ async fn handle_connection(
                                     ws_stream.send(Message::text("Username already taken.".to_string())).await?;
                                 } else {
                                     if users.entry(&addr) == true {
-                                        users.insert(addr, (users.get(addr).0,users.get(addr).1+1));
+                                        users.insert(addr, (users.get(&addr).0,users.get(&addr).1+1));
                                     }
                                     else {
                                         users.insert(addr, (new_username.clone(),0));
