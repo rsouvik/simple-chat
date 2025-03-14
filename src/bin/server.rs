@@ -63,8 +63,8 @@ async fn handle_connection(
                                 if users.values().any(|name| &name.0 == &new_username) {
                                     ws_stream.send(Message::text("Username already taken.".to_string())).await?;
                                 } else {
-                                    if users.entry(addr) == true {
-                                        users.insert(addr, ((users.get(&addr)).0,(users.get(&addr)).1+1));
+                                    if users.contains_key(addr) == true {
+                                        users.insert(addr, ((users.get(&addr)).copied().0,(users.get(&addr)).copied().1+1));
                                     }
                                     else {
                                         users.insert(addr, (new_username.clone(),0));
