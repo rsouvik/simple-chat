@@ -64,13 +64,13 @@ async fn handle_connection(
                                     ws_stream.send(Message::text("Username already taken.".to_string())).await?;
                                 } else {
                                     if users.contains_key(&addr) == true {
-                                        if let Some(tuple_ref) = users.get(&addr) {
+                                        /*if let Some(tuple_ref) = users.get(&addr) {
                                             if let Some(fe) = tuple_ref.as_ref().map(|t| &t.0)
                                               && let Some(se) = tuple_ref.as_ref().map(|t| &t.1) {
                                                 users.insert(addr, (fe,se+1));
                                             }
-                                        }
-                                        //users.insert(addr, ((users.get(&addr)).copied().0,(users.get(&addr)).copied().1+1));
+                                        }*/
+                                        users.insert(addr, ((users.get(&addr)).as_ref().0,(users.get(&addr)).as_ref().1+1));
                                     }
                                     else {
                                         users.insert(addr, (new_username.clone(),0));
