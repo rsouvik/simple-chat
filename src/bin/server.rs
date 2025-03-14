@@ -81,7 +81,7 @@ async fn handle_connection(
                                             }
                                         }*/
                                         if let Some(fv) = users.get(&addr).map(|t| &t.0){
-                                            let sname = fv;
+                                            let sname = fv.clone();
                                             if let Some(sv) = users.get(&addr).map(|t| &t.1){
                                                 let count = sv;
                                                 users.insert(addr, (sname,count+1));
