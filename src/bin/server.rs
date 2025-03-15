@@ -18,7 +18,7 @@ struct User {
 
 // Structure to hold server state
 struct ServerState {
-    users: Mutex<HashMap<SocketAddr,(String,i32)>>, // map addr to username
+    users: Mutex<HashMap<SocketAddr,(String,i32)>> , // map addr to username
     bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
 }
 
@@ -81,7 +81,7 @@ async fn handle_connection(
                                             }
                                         }*/
                                         if let Some(fv) = users.get(&addr).map(|t| &t.0){
-                                            let sname = fv.clone();
+                                            let sname = fv;
                                             if let Some(sv) = users.get(&addr).map(|t| &t.1){
                                                 let count = sv;
                                                 users.insert(addr, (sname,count+1));
