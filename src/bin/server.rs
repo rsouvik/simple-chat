@@ -80,7 +80,7 @@ async fn handle_connection(
                                                 users.insert(addr, (fe,se+1));
                                             }
                                         }*/
-                                        if let Some(fv) = users.get(addr).map(|t| &t.0){
+                                        if let Some(fv) = mut users.get(&addr).map(|t| &t.0){
                                             let sname = fv;
                                             if let Some(sv) = users.get(&addr).map(|t| &t.1){
                                                 let count = sv;
