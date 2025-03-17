@@ -8,6 +8,9 @@ use tokio::sync::{broadcast::{channel, Sender}, Mutex};
 use tokio_websockets::{Message, ServerBuilder, WebSocketStream};
 use std::sync::Arc;
 
+extern crate actix_web;
+use webutils::{index, indexPost};
+
 // Structure to hold user data
 struct User {
     username: String,
@@ -139,6 +142,25 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         users: Mutex::new(HashMap::new()),
         bcast_tx: bcast_tx.clone(),
     });
+
+    //Web server
+    //Start the web server
+    let server = HttpServer::new(move || {
+        App::new()
+            //.app_data(received_data.clone())
+            .app_data(web::Data::new(web_sender.clone()))
+            //.app_data(swarm_controller.clone())
+            //.route("/", web::post().to(receive_data))
+            .route("/test", web::get().to(index))
+            .route("/model", web::post().to(indexPost))
+    })
+        //.bind("127.0.0.1:8080")?
+        .bind("0.0.0.0:8080")?
+        .run();
+    //.await;
+
+    // Start the event loop
+    tokio::spawn(server);
 
     let listener = TcpListener::bind("127.0.0.1:2000").await?;
     println!("Listening on port 2000");
