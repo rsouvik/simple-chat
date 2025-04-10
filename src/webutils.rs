@@ -2,22 +2,20 @@ use actix_web::{web, Responder, HttpResponse};
 use crate::SwarmWebMessage;
 use tokio::{sync::mpsc};
 
-
 //get handler
 pub(crate) async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
     let name = &query.user_name;
 
+    HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
 
-
-
-    let sender_clone = sender.get_ref().clone();
+    //let sender_clone = sender.get_ref().clone();
 
     // Send the query parameter data to the libp2p swarm through the sender channel
-    if sender_clone.send(SwarmWebMessage::DataGet(name.to_owned())).await.is_ok() {
+    /*if sender_clone.send(SwarmWebMessage::DataGet(name.to_owned())).await.is_ok() {
         HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
     } else {
         HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
-    }
+    }*/
 }
 
 pub(crate) async fn indexPost(query: web::Json<ModelParams>) -> impl Responder {
@@ -28,7 +26,8 @@ pub(crate) async fn indexPost(query: web::Json<ModelParams>) -> impl Responder {
     let model_algo = &query.malgo;
     let model_output_loc = &query.moutputloc;*/
 
-    let sender_clone = sender.get_ref().clone();
+    HttpResponse::Ok().body("Data sent to libp2p swarm")
+    //let sender_clone = sender.get_ref().clone();
 
     /*let metadata = serde_json::json!(
                             {
@@ -52,11 +51,11 @@ pub(crate) async fn indexPost(query: web::Json<ModelParams>) -> impl Responder {
 
     // Send the query parameter data to the libp2p swarm through the sender channel
     //if sender_clone.send(SwarmWebMessage::Data(model_loc.to_owned())).await.is_ok() {
-    if sender_clone.send(SwarmWebMessage::Data(query)).await.is_ok() {
+    /*if sender_clone.send(SwarmWebMessage::Data(query)).await.is_ok() {
         //HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", model_loc))
         HttpResponse::Ok().body("Data sent to libp2p swarm")
 
     } else {
         HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
-    }
+    }*/
 }
