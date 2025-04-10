@@ -1,3 +1,6 @@
+
+mod webutils;
+
 use futures_util::sink::SinkExt;
 use futures_util::stream::StreamExt;
 use std::collections::HashMap;
@@ -10,7 +13,6 @@ use std::sync::Arc;
 use actix_web::{web, App, HttpServer, Responder};
 extern crate actix_web;
 
-mod webutils;
 use webutils::{index, indexPost};
 
 // Structure to hold user data
