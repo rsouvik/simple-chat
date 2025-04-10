@@ -11,7 +11,7 @@ use actix_web::{web, App, HttpServer, Responder};
 extern crate actix_web;
 
 //mod webutils;
-use crate::chat_app::webutils::{index, indexPost};
+use crate::chat-app::webutils::{index, indexPost};
 
 // Structure to hold user data
 struct User {
