@@ -151,8 +151,9 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             .app_data(web::Data::new(web_sender.clone()))
             //.app_data(swarm_controller.clone())
             //.route("/", web::post().to(receive_data))
-            .route("/test", web::get().to(index))
-            .route("/model", web::post().to(indexPost))
+            .route("/statsuser", web::get().to(index))
+            .route("/statsall", web::get().to(index))
+            .route("/updateuser", web::post().to(indexPost))
     })
         //.bind("127.0.0.1:8080")?
         .bind("0.0.0.0:8080")?

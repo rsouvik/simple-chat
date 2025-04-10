@@ -6,3 +6,11 @@ diesel::table! {
         published -> Bool,
     }
 }
+
+diesel::table! {
+    users (id) {
+        id -> Int4,
+        username -> Varchar,
+        addr -> Varchar,
+    }
+}
