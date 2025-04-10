@@ -9,7 +9,7 @@ struct MyQueryParams {
 }
 
 //get handler
-pub(crate) async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
+pub(super) async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
     let name = &query.user_name;
 
     HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
