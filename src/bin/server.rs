@@ -7,11 +7,11 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::{broadcast::{channel, Sender}, Mutex};
 use tokio_websockets::{Message, ServerBuilder, WebSocketStream};
 use std::sync::Arc;
-
-extern crate actix_web;
-use webutils::{index, indexPost};
-
 use actix_web::{web, App, HttpServer, Responder};
+extern crate actix_web;
+
+mod webutils;
+use webutils::{index, indexPost};
 
 // Structure to hold user data
 struct User {
