@@ -1,6 +1,11 @@
 use actix_web::{web, Responder, HttpResponse};
-use crate::SwarmWebMessage;
+//use crate::SwarmWebMessage;
 use tokio::{sync::mpsc};
+
+#[derive(Deserialize)]
+struct MyQueryParams {
+    user_name: String,
+}
 
 //get handler
 pub(crate) async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
@@ -18,7 +23,7 @@ pub(crate) async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
     }*/
 }
 
-pub(crate) async fn indexPost(query: web::Json<ModelParams>) -> impl Responder {
+pub(crate) async fn indexPost(query: web::Json<MyQueryParams>) -> impl Responder {
 
     /*let model_type = &query.mtype;
     let model_loc = &query.mlocation;
