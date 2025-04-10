@@ -2,9 +2,9 @@ use diesel::prelude::*;
 use dotenvy::dotenv;
 use std::env;
 
-pub mod models;
-pub mod schema;
-pub mod webutils;
+pub(crate) mod models;
+pub(crate) mod schema;
+pub(crate) mod webutils;
 
 pub fn establish_connection() -> PgConnection {
     dotenv().ok();
