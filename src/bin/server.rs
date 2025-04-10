@@ -1,6 +1,4 @@
 
-mod webutils;
-
 use futures_util::sink::SinkExt;
 use futures_util::stream::StreamExt;
 use std::collections::HashMap;
