@@ -11,6 +11,8 @@ use std::sync::Arc;
 extern crate actix_web;
 use webutils::{index, indexPost};
 
+use actix_web::{web, App, HttpServer, Responder};
+
 // Structure to hold user data
 struct User {
     username: String,
