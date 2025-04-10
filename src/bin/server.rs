@@ -10,8 +10,8 @@ use std::sync::Arc;
 use actix_web::{web, App, HttpServer, Responder};
 extern crate actix_web;
 
-//mod webutils;
-use crate::chat-app::webutils::{index, indexPost};
+mod webutils;
+use webutils::{index, indexPost};
 
 // Structure to hold user data
 struct User {
