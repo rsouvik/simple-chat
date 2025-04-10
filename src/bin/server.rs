@@ -145,12 +145,15 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         bcast_tx: bcast_tx.clone(),
     });
 
+    //web data processing
+    //let (web_sender, mut web_receiver) = mpsc::channel::<SwarmWebMessage>(100);
+
     //Web server
     //Start the web server
     let server = HttpServer::new(move || {
         App::new()
             //.app_data(received_data.clone())
-            .app_data(web::Data::new(web_sender.clone()))
+            //.app_data(web::Data::new(web_sender.clone()))
             //.app_data(swarm_controller.clone())
             //.route("/", web::post().to(receive_data))
             .route("/statsuser", web::get().to(index))
