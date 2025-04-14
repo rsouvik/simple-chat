@@ -1,4 +1,3 @@
-pub mod webutils {
     use actix_web::{web, Responder, HttpResponse};
     //use crate::SwarmWebMessage;
     use tokio::{sync::mpsc};
@@ -65,4 +64,3 @@ pub mod webutils {
         HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
     }*/
     }
-}
