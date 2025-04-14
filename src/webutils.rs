@@ -5,7 +5,7 @@
     use serde::{Serialize, Deserialize};
 
     #[derive(Deserialize)]
-    struct MyQueryParams {
+    pub struct MyQueryParams {
         user_name: String,
     }
 
