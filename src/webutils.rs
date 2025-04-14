@@ -1,3 +1,4 @@
+pub mod webutils {
     use actix_web::{web, Responder, HttpResponse};
     //use crate::SwarmWebMessage;
     use tokio::{sync::mpsc};
@@ -9,7 +10,7 @@
     }
 
     //get handler
-    pub(crate) async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
+    pub async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
         let name = &query.user_name;
 
         HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
@@ -24,7 +25,7 @@
     }*/
     }
 
-    pub(crate) async fn indexPost(query: web::Json<MyQueryParams>) -> impl Responder {
+    pub async fn indexPost(query: web::Json<MyQueryParams>) -> impl Responder {
         /*let model_type = &query.mtype;
     let model_loc = &query.mlocation;
     let model_data_loc = &query.mdataloc;
@@ -64,3 +65,4 @@
         HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
     }*/
     }
+}
