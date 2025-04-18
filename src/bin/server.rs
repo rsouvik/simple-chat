@@ -19,7 +19,7 @@ use chat_app::webutils::{index, indexPost};
 struct User {
     username: String,
     addr: SocketAddr,
-    ws_stream: WebSocketStream<TcpStream>, // do we need this?
+    //ws_stream: WebSocketStream<TcpStream>, // do we need this?
     lifetime_cnt: i32,
 }
 
@@ -99,7 +99,7 @@ async fn handle_connection(
 
                                         if let Some((sname, count)) = users.get(&addr).cloned() {
                                             //users.insert(addr, (sname.clone(), count + 1));
-                                            users.insert(addr, User(sname.clone(),count+1));
+                                            users.insert(addr, User(sname.clone(), addr, count+1));
                                         }
                                         /*users.entry(addr).
                                              .and_modify(|entry| entry.1+=1)
@@ -107,7 +107,7 @@ async fn handle_connection(
                                         //users.insert(addr, ((users.get(&addr)).as_ref().0,(users.get(&addr)).as_ref().1+1));
                                     }
                                     else {
-                                        users.insert(addr, (new_username.clone(),0));
+                                        users.insert(addr, User(new_username.clone(),addr,0));
                                         }
                                     ws_stream.send(Message::text(format!("Joined as {}", new_username))).await?;
                                     state.bcast_tx.send(format!("{} has joined the chat.", new_username))?;
