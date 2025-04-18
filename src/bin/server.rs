@@ -98,7 +98,8 @@ async fn handle_connection(
                                         }*/
 
                                         if let Some((sname, count)) = users.get(&addr).cloned() {
-                                            users.insert(addr, (sname.clone(), count + 1));
+                                            //users.insert(addr, (sname.clone(), count + 1));
+                                            users.insert(addr, User(sname.clone(),count+1));
                                         }
                                         /*users.entry(addr).
                                              .and_modify(|entry| entry.1+=1)
