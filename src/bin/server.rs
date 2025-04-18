@@ -24,7 +24,8 @@ struct User {
 
 // Structure to hold server state
 struct ServerState {
-    users: Mutex<HashMap<SocketAddr,(String,i32)>> , // map addr to username
+    users: Mutex<HashMap<SocketAddr,User>> , // map addr to username
+    //users: Mutex<HashMap<SocketAddr,(String,i32)>> , // map addr to username
     bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
 }
 
@@ -32,7 +33,7 @@ struct ServerState {
 impl ServerState {
     async fn broadcast_message(&self, addr: &SocketAddr, message: String) {
         let users = self.users.lock().await;
-        if let Some(sname) = users.get(addr).map(|t| &t.0){
+        if let Some(sname) = users.get(addr).map(|t| &t.username){
             let sender_name = sname;
             let full_msg = format!("{}: {}", sender_name, message);
 
