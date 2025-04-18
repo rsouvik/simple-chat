@@ -15,6 +15,7 @@ extern crate actix_web;
 use chat_app::webutils::{index, indexPost};
 
 // Structure to hold user data
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct User {
     username: String,
     addr: SocketAddr,
@@ -77,7 +78,8 @@ async fn handle_connection(
                                 let new_username = text[6..].trim().to_string();
                                 let mut users = state.users.lock().await;
 
-                                if users.values().any(|name| &name.0 == &new_username) {
+                                //if users.values().any(|name| &name.0 == &new_username) {
+                                if users.values().any(|name| &name.username == &new_username) {
                                     ws_stream.send(Message::text("Username already taken.".to_string())).await?;
                                 } else {
                                     if users.contains_key(&addr) == true {
