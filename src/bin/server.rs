@@ -100,7 +100,7 @@ async fn handle_connection(
                                         if let Some((sname, count)) = users.get(&addr).cloned() {
                                             //users.insert(addr, (sname.clone(), count + 1));
                                             //users.insert(addr, User(sname.clone(), addr, count+1));
-                                            users.insert(addr, User{sname.clone(), addr, count+1});
+                                            users.insert(addr, User{username: sname.clone(), addr: addr, lifetime_cnt: count+1});
                                         }
                                         /*users.entry(addr).
                                              .and_modify(|entry| entry.1+=1)
@@ -108,7 +108,7 @@ async fn handle_connection(
                                         //users.insert(addr, ((users.get(&addr)).as_ref().0,(users.get(&addr)).as_ref().1+1));
                                     }
                                     else {
-                                        users.insert(addr, User{new_username.clone(),addr,0});
+                                        users.insert(addr, User{username:new_username.clone(), addr: addr, lifetime_cnt: 0});
                                         }
                                     ws_stream.send(Message::text(format!("Joined as {}", new_username))).await?;
                                     state.bcast_tx.send(format!("{} has joined the chat.", new_username))?;
