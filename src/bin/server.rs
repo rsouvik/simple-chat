@@ -98,7 +98,7 @@ async fn handle_connection(
                                             }
                                         }*/
 
-                                        if let Some(U) = users.get(&addr).cloned(), {
+                                        if let Some(U) = users.get(&addr).cloned() {
                                             //users.insert(addr, (sname.clone(), count + 1));
                                             //users.insert(addr, User(sname.clone(), addr, count+1));
                                             users.insert(addr, User{username: U.username, addr: addr, lifetime_cnt: U.lifetime_cnt+1});
