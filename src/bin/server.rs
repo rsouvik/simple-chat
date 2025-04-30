@@ -14,15 +14,7 @@ extern crate actix_web;
 
 //mod webutils;
 
-use chat_app::webutils::{index, indexPost, User};
-
-// Structure to hold server state
-#[derive(Debug, Clone)]
-pub struct ServerState {
-    pub users: Mutex<HashMap<SocketAddr,User>> , // map addr to username
-    //users: Mutex<HashMap<SocketAddr,(String,i32)>> , // map addr to username
-    pub bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
-}
+use chat_app::webutils::{index, indexPost, User, ServerState};
 
 //Make sure to broadcast to all others except sender
 impl ServerState {

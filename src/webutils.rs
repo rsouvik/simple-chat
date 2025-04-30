@@ -23,6 +23,14 @@ pub struct User {
     pub lifetime_cnt: i32,
 }
 
+// Structure to hold server state
+#[derive(Debug, Clone)]
+pub struct ServerState {
+    pub users: Mutex<HashMap<SocketAddr,User>> , // map addr to username
+    //users: Mutex<HashMap<SocketAddr,(String,i32)>> , // map addr to username
+    pub bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
+}
+
 //get handler
 pub async fn statsall(query: web::Query<MyQueryParams>, state: web::Data<ServerState>) -> impl Responder {
     let users_map = state.users.lock().unwrap(); // be careful with unwrap
