@@ -160,7 +160,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let server = HttpServer::new(move || {
         App::new()
             //.app_data(received_data.clone())
-            //.app_data(web::Data::new(web_sender.clone()))
+            .app_data(web::Data::new(state.users.clone()))
             //.app_data(swarm_controller.clone())
             //.route("/", web::post().to(receive_data))
             .route("/statsuser", web::get().to(index))

@@ -1,67 +1,74 @@
 
-    use actix_web::{web, Responder, HttpResponse};
-    //use crate::SwarmWebMessage;
-    use tokio::{sync::mpsc};
-    use serde::{Serialize, Deserialize};
+use std::collections::HashMap;
+use std::net::SocketAddr;
+use actix_web::{web, Responder, HttpResponse};
+//use crate::SwarmWebMessage;
+use tokio::{sync::mpsc};
+use serde::{Serialize, Deserialize};
 
-    #[derive(Deserialize)]
-    pub struct MyQueryParams {
-        user_name: String,
-    }
+#[derive(Deserialize)]
+pub struct MyQueryParams {
+    user_name: String,
+}
 
-    //get handler
-    pub async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
-        let name = &query.user_name;
+//get handler
+pub async fn statsall(query: web::Query<MyQueryParams>, users: HashMap<SocketAddr,User>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
+}
 
-        HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
+//get handler
+pub async fn index(query: web::Query<MyQueryParams>) -> impl Responder {
+    let name = &query.user_name;
 
-        //let sender_clone = sender.get_ref().clone();
+    HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
 
-        // Send the query parameter data to the libp2p swarm through the sender channel
-        /*if sender_clone.send(SwarmWebMessage::DataGet(name.to_owned())).await.is_ok() {
-        HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
-    } else {
-        HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
-    }*/
-    }
+    //let sender_clone = sender.get_ref().clone();
 
-    pub async fn indexPost(query: web::Json<MyQueryParams>) -> impl Responder {
-        /*let model_type = &query.mtype;
-    let model_loc = &query.mlocation;
-    let model_data_loc = &query.mdataloc;
-    let model_algo = &query.malgo;
-    let model_output_loc = &query.moutputloc;*/
+    // Send the query parameter data to the libp2p swarm through the sender channel
+    /*if sender_clone.send(SwarmWebMessage::DataGet(name.to_owned())).await.is_ok() {
+    HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
+} else {
+    HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
+}*/
+}
 
-        HttpResponse::Ok().body("Data sent to libp2p swarm")
-        //let sender_clone = sender.get_ref().clone();
+pub async fn indexPost(query: web::Json<MyQueryParams>) -> impl Responder {
+    /*let model_type = &query.mtype;
+let model_loc = &query.mlocation;
+let model_data_loc = &query.mdataloc;
+let model_algo = &query.malgo;
+let model_output_loc = &query.moutputloc;*/
 
-        /*let metadata = serde_json::json!(
-                            {
-                              "mtype": model_type,
-                              "mlocation": model_loc,   //e.g. s3://picxelate/dgp/create_model.py
-                              "mdataloc": model_data_loc,
-                              "malgo": model_algo,
-                              "moutputloc": model_output_loc,
-                            }
-                            );*/
-        //e.g. s3://picxelate/dgp/create_model.py
-        /*let metadata =     r#"{
-                              "mtype": model_type,
-                              "mlocation": model_loc,
-                              "mdataloc": model_data_loc,
-                              "malgo": model_algo,
-                              "moutputloc": model_output_loc,
-                            }"#;*/
+    HttpResponse::Ok().body("Data sent to libp2p swarm")
+    //let sender_clone = sender.get_ref().clone();
 
-        //do metadata check about known peers
+    /*let metadata = serde_json::json!(
+                        {
+                          "mtype": model_type,
+                          "mlocation": model_loc,   //e.g. s3://picxelate/dgp/create_model.py
+                          "mdataloc": model_data_loc,
+                          "malgo": model_algo,
+                          "moutputloc": model_output_loc,
+                        }
+                        );*/
+    //e.g. s3://picxelate/dgp/create_model.py
+    /*let metadata =     r#"{
+                          "mtype": model_type,
+                          "mlocation": model_loc,
+                          "mdataloc": model_data_loc,
+                          "malgo": model_algo,
+                          "moutputloc": model_output_loc,
+                        }"#;*/
 
-        // Send the query parameter data to the libp2p swarm through the sender channel
-        //if sender_clone.send(SwarmWebMessage::Data(model_loc.to_owned())).await.is_ok() {
-        /*if sender_clone.send(SwarmWebMessage::Data(query)).await.is_ok() {
-        //HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", model_loc))
-        HttpResponse::Ok().body("Data sent to libp2p swarm")
+    //do metadata check about known peers
 
-    } else {
-        HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
-    }*/
-    }
+    // Send the query parameter data to the libp2p swarm through the sender channel
+    //if sender_clone.send(SwarmWebMessage::Data(model_loc.to_owned())).await.is_ok() {
+    /*if sender_clone.send(SwarmWebMessage::Data(query)).await.is_ok() {
+    //HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", model_loc))
+    HttpResponse::Ok().body("Data sent to libp2p swarm")
+
+} else {
+    HttpResponse::InternalServerError().body("Failed to send data to libp2p swarm")
+}*/
+}
