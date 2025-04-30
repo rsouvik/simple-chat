@@ -141,7 +141,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     loop {
         let (socket, addr) = listener.accept().await?;
-        let state = state.clone();
+        let state = shared_state.clone();
 
         tokio::spawn(async move {
             let ws_stream = ServerBuilder::new().accept(socket).await?;
