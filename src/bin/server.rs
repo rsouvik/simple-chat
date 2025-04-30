@@ -14,7 +14,7 @@ extern crate actix_web;
 
 //mod webutils;
 
-use chat_app::webutils::{index, indexPost, User, ServerState};
+use chat_app::webutils::{statsall, index, indexPost, User, ServerState};
 
 async fn handle_connection(
     addr: SocketAddr,
