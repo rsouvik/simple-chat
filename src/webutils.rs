@@ -16,7 +16,7 @@ pub struct MyQueryParams {
 
 // Structure to hold user data
 #[derive(Debug, Serialize, Deserialize, Clone)]
-struct User {
+pub struct User {
     username: String,
     addr: SocketAddr,
     //ws_stream: WebSocketStream<TcpStream>, // do we need this?
