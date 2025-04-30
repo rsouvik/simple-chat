@@ -17,6 +17,7 @@ extern crate actix_web;
 use chat_app::webutils::{index, indexPost, User};
 
 // Structure to hold server state
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct ServerState {
     users: Mutex<HashMap<SocketAddr,User>> , // map addr to username
     //users: Mutex<HashMap<SocketAddr,(String,i32)>> , // map addr to username
