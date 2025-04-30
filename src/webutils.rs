@@ -17,10 +17,10 @@ pub struct MyQueryParams {
 // Structure to hold user data
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct User {
-    username: String,
-    addr: SocketAddr,
+    pub username: String,
+    pub addr: SocketAddr,
     //ws_stream: WebSocketStream<TcpStream>, // do we need this?
-    lifetime_cnt: i32,
+    pub lifetime_cnt: i32,
 }
 
 //get handler
