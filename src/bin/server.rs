@@ -17,11 +17,11 @@ extern crate actix_web;
 use chat_app::webutils::{index, indexPost, User};
 
 // Structure to hold server state
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct ServerState {
-    users: Mutex<HashMap<SocketAddr,User>> , // map addr to username
+#[derive(Debug, Clone)]
+pub struct ServerState {
+    pub users: Mutex<HashMap<SocketAddr,User>> , // map addr to username
     //users: Mutex<HashMap<SocketAddr,(String,i32)>> , // map addr to username
-    bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
+    pub bcast_tx: Sender<String>, // broadcast channel for sending messages to all users
 }
 
 //Make sure to broadcast to all others except sender
@@ -148,12 +148,13 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     //web data processing
     //let (web_sender, mut web_receiver) = mpsc::channel::<SwarmWebMessage>(100);
 
+    let shared_state = web::Data::new(state);
     //Web server
     //Start the web server
     let server = HttpServer::new(move || {
         App::new()
             //.app_data(received_data.clone())
-            .app_data(web::Data::new(state.clone()))
+            .app_data(shared_state.clone())
             //.app_data(swarm_controller.clone())
             //.route("/", web::post().to(receive_data))
             .route("/statsuser", web::get().to(index))
