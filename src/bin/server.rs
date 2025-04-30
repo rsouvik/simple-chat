@@ -16,31 +16,6 @@ extern crate actix_web;
 
 use chat_app::webutils::{index, indexPost, User, ServerState};
 
-//Make sure to broadcast to all others except sender
-impl ServerState {
-    async fn broadcast_message(&self, addr: &SocketAddr, message: String) {
-        let users = self.users.lock().await;
-        if let Some(sname) = users.get(addr).map(|t| &t.username){
-            let sender_name = sname;
-            let full_msg = format!("{}: {}", sender_name, message);
-
-            for (user_addr, _) in users.iter() {
-                if user_addr != addr {
-                    self.bcast_tx.send(full_msg.clone()).unwrap();
-                }
-            }
-        }
-        /*let sender_name = users.get(addr).as_ref().0.unwrap();
-        let full_msg = format!("{}: {}", sender_name, message);
-
-        for (user_addr, _) in users.iter() {
-            if user_addr != addr {
-                self.bcast_tx.send(full_msg.clone()).unwrap();
-            }
-        }*/
-    }
-}
-
 async fn handle_connection(
     addr: SocketAddr,
     mut ws_stream: WebSocketStream<TcpStream>,
