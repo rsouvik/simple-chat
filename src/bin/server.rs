@@ -115,7 +115,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     //web data processing
     //let (web_sender, mut web_receiver) = mpsc::channel::<SwarmWebMessage>(100);
 
-    let shared_state = web::Data::new(state);
+    let shared_state = web::Data::new(state.clone());
     //Web server
     //Start the web server
     let server = HttpServer::new(move || {
@@ -141,11 +141,11 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     loop {
         let (socket, addr) = listener.accept().await?;
-        let state = shared_state.clone();
+        let conn_state = state.clone();
 
         tokio::spawn(async move {
             let ws_stream = ServerBuilder::new().accept(socket).await?;
-            handle_connection(addr, ws_stream, state.clone()).await
+            handle_connection(addr, ws_stream, conn_state).await
         });
     }
 }
