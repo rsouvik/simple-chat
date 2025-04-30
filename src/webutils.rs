@@ -6,13 +6,16 @@ use actix_web::{web, Responder, HttpResponse};
 use tokio::{sync::mpsc};
 use serde::{Serialize, Deserialize};
 
+#[path = "../src/bin/server.rs"]
+mod server;
+
 #[derive(Deserialize)]
 pub struct MyQueryParams {
     user_name: String,
 }
 
 //get handler
-pub async fn statsall(query: web::Query<MyQueryParams>, users: HashMap<SocketAddr,User>) -> impl Responder {
+pub async fn statsall(query: web::Query<MyQueryParams>, users: HashMap<SocketAddr,server::User>) -> impl Responder {
     HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
 }
 

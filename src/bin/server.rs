@@ -13,6 +13,7 @@ use serde::{Serialize, Deserialize};
 extern crate actix_web;
 
 //mod webutils;
+
 use chat_app::webutils::{index, indexPost};
 
 // Structure to hold user data
