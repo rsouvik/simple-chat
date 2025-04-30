@@ -108,7 +108,7 @@ async fn handle_connection(
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let (bcast_tx, _) = channel(16);
     let state = Arc::new(ServerState {
-        users: Arc::Mutex::new(HashMap::new()),
+        users: Arc::new(Mutex::new(HashMap::new())),
         bcast_tx: bcast_tx.clone(),
     });
 
