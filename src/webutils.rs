@@ -25,7 +25,7 @@ struct User {
 
 //get handler
 pub async fn statsall(query: web::Query<MyQueryParams>, users: HashMap<SocketAddr, User>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", name))
+    HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", users.keys().len()))
 }
 
 //get handler
