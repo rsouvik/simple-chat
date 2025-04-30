@@ -14,16 +14,7 @@ extern crate actix_web;
 
 //mod webutils;
 
-use chat_app::webutils::{index, indexPost};
-
-// Structure to hold user data
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct User {
-    username: String,
-    addr: SocketAddr,
-    //ws_stream: WebSocketStream<TcpStream>, // do we need this?
-    lifetime_cnt: i32,
-}
+use chat_app::webutils::{index, indexPost, User};
 
 // Structure to hold server state
 struct ServerState {
