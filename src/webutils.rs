@@ -60,7 +60,7 @@ impl ServerState {
 }
 
 //get handler
-pub async fn statsall(query: web::Query<MyQueryParams>, state: web::Data<ServerState>) -> impl Responder {
+pub async fn statsall(query: web::Query<MyQueryParams>, state: web::Data<Arc<ServerState>>) -> impl Responder {
     HttpResponse::Ok().body(format!("Total users: "))
     /*let users_map = state.users.lock().await; // be careful with unwrap
     let count = users_map.len();
