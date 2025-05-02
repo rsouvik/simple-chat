@@ -141,8 +141,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     loop {
         let (socket, addr) = listener.accept().await?;
-        println!("socket: {}", socket);
-        println!("address: {}", addr);
+        println!("socket: {:?}", socket);
+        println!("address: {:?}", addr);
         let conn_state = state.clone();
 
         tokio::spawn(async move {
