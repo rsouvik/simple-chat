@@ -63,6 +63,9 @@ impl ServerState {
 pub async fn statsall(query: web::Query<MyQueryParams>, state: web::Data<Arc<ServerState>>) -> impl Responder {
     let users_map = state.users.lock().await; // be careful with unwrap
     let count = users_map.len();
+    for (sock_add, U) in users_map.into_iter() {
+        println!("{} / {}", U.username, U.lifetime_cnt);
+    }
     HttpResponse::Ok().body(format!("Total users: {}", count))
     //HttpResponse::Ok().body(format!("Data sent to libp2p swarm: {}", users.keys().len()))
 }
